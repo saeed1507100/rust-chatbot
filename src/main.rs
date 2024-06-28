@@ -2,6 +2,8 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::io::{self, Write};
+use std::env;
+use dotenv::dotenv;
 
 #[derive(Serialize)]
 struct RequestBody {
@@ -19,7 +21,7 @@ async fn get_llm_response(query: String) -> Result<(), Box<dyn Error>> {
 
     // Define the URL and the API token
     let url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3";
-    let api_token = "hf_*************";
+    let api_token = env::var("HUGGINGFACE_API_TOKEN").expect("API_TOKEN must be set");
 
     // Create the request body
     let request_body = RequestBody {
@@ -50,6 +52,7 @@ async fn get_llm_response(query: String) -> Result<(), Box<dyn Error>> {
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
     // welcome message
     println!("Hi, I'm a Rust chatbot! How can I help you today?");
 
